@@ -3,6 +3,7 @@ package com.example.mong.service;
 import com.example.mong.exception.TaskNotFound;
 import com.example.mong.model.Todo;
 import com.example.mong.repo.TodoRepo;
+import lombok.ToString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,11 +31,16 @@ public class Todoservice {
     return  TODO_REPO.save(task);
     }
 
+    public Todo createTask(Todo tmp) {
+    return TODO_REPO.save(tmp);
+    }
+
     //delete per id
-//    public  String  deleteTask(String id){
-//
-//    System.out.println();
-//    }
+    public  String  deleteTask(Todo tmp){
+//    Todo tmp = TODO_REPO.findById(id);
+    TODO_REPO.delete(tmp);
+    return "ok";
+    }
 
 
 }
