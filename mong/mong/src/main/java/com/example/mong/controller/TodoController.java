@@ -25,8 +25,12 @@ public class TodoController {
     }
     @GetMapping("/{id}")
     public ResponseEntity<?> getTasksById(@PathVariable String id){
+        try{
         Todo ts = TODO_SERVICE.getTaskByid(id);
-        return new ResponseEntity<>(ts,HttpStatus.OK);
+        return new ResponseEntity<>(ts,HttpStatus.OK);}
+        catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
+        }
     }
     @PostMapping
     public ResponseEntity<?> createTask(@RequestBody Todo tmp ){
@@ -44,5 +48,15 @@ public class TodoController {
     public ResponseEntity<?> deleteTask(@PathVariable String id){
         return TODO_SERVICE.deleteTask(id);
     }
+
+    @GetMapping("/tell/{text}")
+    public String ret(@PathVariable String text){
+        return text;
+    }
+
+    @GetMapping("/mock")
+    public ResponseEntity<Todo> mo(@RequestBody Todo todo){
+        return new ResponseEntity<Todo>(todo,HttpStatus.OK);}
+
 
 }
