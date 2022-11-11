@@ -1,11 +1,9 @@
 package com.example.mong.controller;
 
 import com.example.mong.model.Todo;
-import com.example.mong.service.Todoservice;
-import lombok.ToString;
+import com.example.mong.service.TodoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,9 +12,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/tasks")
 public class TodoController {
-    public final Todoservice TODO_SERVICE;
+    public final TodoService TODO_SERVICE;
     @Autowired
-    public TodoController(Todoservice todo_service) {
+    public TodoController(TodoService todo_service) {
         TODO_SERVICE = todo_service;
     }
 
@@ -32,6 +30,7 @@ public class TodoController {
     }
     @PostMapping
     public ResponseEntity<?> createTask(@RequestBody Todo tmp ){
+//        System.out.println(tmp.getName());
         return new ResponseEntity<>(TODO_SERVICE.createTask(tmp),HttpStatus.OK);
 
     }
@@ -42,17 +41,8 @@ public class TodoController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteTask(@RequestBody String id){
-        try{
-            Todo obj = TODO_SERVICE.getTaskByid(id);
-            TODO_SERVICE.deleteTask(obj);
-            return new ResponseEntity<>("deleted :"+id,HttpStatus.OK);
-
-        }catch (Exception e){
-            System.out.println(e.toString());
-            return new ResponseEntity<>(e.getMessage(),HttpStatus.OK);
-
-
-        }
+    public ResponseEntity<?> deleteTask(@PathVariable String id){
+        return TODO_SERVICE.deleteTask(id);
     }
+
 }
