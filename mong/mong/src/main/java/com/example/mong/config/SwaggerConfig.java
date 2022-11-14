@@ -1,4 +1,4 @@
-package training.acabes.mock.config;
+package com.example.mong.config;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -17,10 +17,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Configuration
- @EnableSwagger2
- @ConfigurationProperties("config.app.api")
- @ConditionalOnProperty(name="config.app.api.swagger.enable", havingValue = "true", matchIfMissing = false)
- public class SwaggerConfig {
+@EnableSwagger2
+@ConfigurationProperties("config.app.api")
+@ConditionalOnProperty(name="config.app.api.swagger.enable", havingValue = "true", matchIfMissing = false)
+public class SwaggerConfig {
 
 
     private String version;
@@ -40,30 +40,30 @@ import java.time.LocalDateTime;
 
 
     public Docket api() {
-         return new Docket(DocumentationType.SWAGGER_2)
-         .select()
+        return new Docket(DocumentationType.SWAGGER_2)
+                .select()
 //         .apis(RequestHandlerSelectors.basePackage("training.acabes"))
-                 .apis(RequestHandlerSelectors.basePackage(basePackage))
-                 .paths(PathSelectors.any())
-         .build()
-         .directModelSubstitute(LocalDate.class, java.sql.Date.class)
-         .directModelSubstitute(LocalDateTime.class, java.util.Date.class)
-         .apiInfo(apiInfo());
+                .apis(RequestHandlerSelectors.basePackage(basePackage))
+                .paths(PathSelectors.any())
+                .build()
+                .directModelSubstitute(LocalDate.class, java.sql.Date.class)
+                .directModelSubstitute(LocalDateTime.class, java.util.Date.class)
+                .apiInfo(apiInfo());
 
     }
 
 
     private ApiInfo apiInfo() {
-         return new ApiInfoBuilder()
+        return new ApiInfoBuilder()
 //         .title("Spring Boot APIs")
-                 .title(title)
+                .title(title)
 //         .description("Spring Boot APIs description")
-                 .description(description)
+                .description(description)
 //        .version("1.0.0")
-                 .version(version)
+                .version(version)
 //         .contact(new Contact("badusha", "null", "b@b.com"))
-                 .contact(new Contact(contactName, "null", contactEmail))
-        .build();
+                .contact(new Contact(contactName, "null", contactEmail))
+                .build();
 
     }
 }

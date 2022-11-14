@@ -32,10 +32,9 @@ public class StudentController {
     @GetMapping
     public ResponseEntity<Student> getStudent(@RequestParam String name,@RequestParam int age,@RequestParam Date dob
                                               ,@RequestParam Long id){
-        log.trace("get called");//while in trace
+
         log.info("get info");//at normal log
-        log.debug("get debug");//whith debug true only
-        log.warn("get warn");//every where
+
         log.error("get error");//every where
         Student data= studentService.get(name,age,dob,id);
         return new ResponseEntity<>(data, HttpStatus.OK);
@@ -43,12 +42,15 @@ public class StudentController {
 
     @PutMapping
     public ResponseEntity<Student> putStudent(@RequestBody Student student){
+        log.info(" put request called"+student.toString());//at normal log
+
         Student data= studentService.update(student);
         return new ResponseEntity<>(data, HttpStatus.OK);
     }
 
     @DeleteMapping
     public ResponseEntity<ResponceModel> deleteStudent(@RequestParam Long id){
+        log.info("deleted student with id "+id);
         ResponceModel responceModel = studentService.delete(id);
         return new ResponseEntity<>(responceModel, HttpStatus.OK);
     }
