@@ -65,6 +65,9 @@
 					</excludes>
 				</configuration>
 			</plugin>
+<!--			test-->
+
+<!--			test end-->
 		</plugins>
 	</build>
 

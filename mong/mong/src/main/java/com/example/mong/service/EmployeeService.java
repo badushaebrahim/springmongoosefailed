@@ -1,12 +1,12 @@
 package com.example.mong.service;
 
-import com.example.mong.config.ModelMapperBean;
 import com.example.mong.model.EmployeeDto;
 import com.example.mong.model.ResponceModel;
 import com.example.mong.model.entity.EmployeeEntity;
 import com.example.mong.repo.EmployeeRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.valves.StuckThreadDetectionValve;
+import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.RequestEntity;
@@ -26,12 +26,12 @@ public class EmployeeService {
 
     public EmployeeEntity create(EmployeeDto employeeDto){
         try{
-            log.info("employeedto for create "+employeeDto.toString());
+            log.info("employeedto {} , interactionId : {} for create ",employeeDto.toString(),employeeDto.getId());
         EmployeeEntity employeeEntity = modelMapper.map(employeeDto,EmployeeEntity.class);
-            log.info("employee entity for create "+employeeEntity.toString());
+            log.info("employee entity for create {} ",employeeEntity.toString());
         EmployeeEntity emp =employeeRepo.save(employeeEntity);
-            log.info("employee entity saved to db "+emp.toString());
-        log.info("employee saved to db");
+            log.info("employee entity saved to db {}",emp.toString());
+            log.info("employee saved to db");
        return emp ;
 
         }
@@ -76,20 +76,54 @@ public class EmployeeService {
 
         }
     }
-    public EmployeeEntity updateOnlyVals(EmployeeEntity emp){
-        EmployeeEntity emps=new EmployeeEntity();
+    public EmployeeEntity updateOnlyVals(EmployeeDto emp)
+    {
+        modelMapper.getConfiguration().setSkipNullEnabled(true);
+        EmployeeEntity data2 = getemployeeById(emp.getId());
+        modelMapper.map(emp,data2);
+
         EmployeeEntity data = getemployeeById(emp.getId());
-        if (emp.getFiestname().isBlank()){
+        if (data2.getFiestname().isBlank()){
+            log.info("1blank fname");
+            data2.setFiestname(data.getFiestname());
+        }if (data2.getLastname().isBlank()){
+            log.info("not up {}",data2.getLastname());
             log.info("blank fname");
-            emp.setFiestname(data.getFiestname());
-        }if (emp.getLastname().isBlank()){
+            data2.setLastname(data.getLastname());
+        log.info(" up {}",data2.getLastname());
+        }if (data2.getMonbilenumber().describeConstable().isPresent()){
+//            emp.setMonbilenumber(emps.getMonbilenumber());
             log.info("blank fname");
-            emp.setLastname(data.getLastname());
-        }if (!emp.getMonbilenumber().describeConstable().isPresent()){
+            data2.setMonbilenumber(data.getMonbilenumber());
+        }if (data2.getMonbilenumber().describeConstable().isPresent()){
             log.info("blank fname");
-            emp.setMonbilenumber(data.getMonbilenumber());
+            data2.setMonbilenumber(data.getMonbilenumber());
+        }if (data2.getDob().toString().isBlank()){
+            data2.setDob(data.getDob());
+        }
+        if (data2.getPost().isBlank()){
+            data2.setPost(data.getPost());
+        }
+        if (data2.getEmployeestatus().isBlank()){
+                data2.setEmployeestatus(data.getEmployeestatus());
+        }if(data2.getCreatedat().toString().isBlank()){
+            data2.setCreatedat(data.getCreatedat());
+        }if(data2.getEmergencycontact().isBlank()){
+            data2.setEmergencycontact(data.getEmergencycontact());
         }
 
+//        return data2;
+
+        return employeeRepo.save(data2);
+    }
+
+    public EmployeeEntity updateOnlyChanged (EmployeeDto dto){
+        EmployeeEntity emp = getemployeeById(dto.getId());
+////        modelMapper.map(dto,emp);
+//        modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
+        modelMapper.getConfiguration().setSkipNullEnabled(true);
+        log.info("mapped val {}",dto.toString());
+        modelMapper.map(dto,emp);
         return emp;
 
     }

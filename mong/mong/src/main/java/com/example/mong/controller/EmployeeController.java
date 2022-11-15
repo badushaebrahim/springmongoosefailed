@@ -42,12 +42,13 @@ public class EmployeeController {
 
     }
     @PutMapping
-    public ResponseEntity<?> updateEmployee(@RequestBody EmployeeEntity employeeEntity){
+    public ResponseEntity<?> updateEmployee(@RequestBody EmployeeDto employeeEntity){
         try{
-            EmployeeEntity employee =employeeService.updateEmployee(employeeEntity);
+//            EmployeeEntity employee =employeeService.updateEmployee(employeeEntity);
+                EmployeeEntity employee =employeeService.updateOnlyVals(employeeEntity);
             return  new ResponseEntity<>(employee, HttpStatus.OK);
         }catch (Exception e){
-            return  new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return  new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
 
     }
@@ -57,8 +58,9 @@ public class EmployeeController {
         return new ResponseEntity<>(employeeService.deletebyid(id),HttpStatus.OK);
     }
 
-    @PutMapping("/test")
-    public ResponseEntity<?> updatedsel(@RequestBody EmployeeEntity emps){
-        return new ResponseEntity<>(employeeService.updateOnlyVals(emps),HttpStatus.OK);
-    }
+//    @PutMapping("/test")
+//    public ResponseEntity<?> updatedsel(@RequestBody EmployeeDto emps){
+//        return new ResponseEntity<>(employeeService.updateOnlyVals(emps),HttpStatus.OK);
+////        return new ResponseEntity<>(employeeService.updateOnlyChanged(emps),HttpStatus.OK);
+//    }
 }
