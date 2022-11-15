@@ -1,6 +1,7 @@
 package com.example.mong.service;
 
 import com.example.mong.model.EmployeeDto;
+import com.example.mong.model.EmployeeReq;
 import com.example.mong.model.ResponceModel;
 import com.example.mong.model.entity.EmployeeEntity;
 import com.example.mong.repo.EmployeeRepo;
@@ -24,9 +25,9 @@ public class EmployeeService {
     ModelMapper modelMapper;
 
 
-    public EmployeeEntity create(EmployeeDto employeeDto){
+    public EmployeeEntity create(EmployeeReq employeeDto){
         try{
-            log.info("employeedto {} , interactionId : {} for create ",employeeDto.toString(),employeeDto.getId());
+            log.info("employeedto {} , interactionId : {} for create ",employeeDto.toString());
         EmployeeEntity employeeEntity = modelMapper.map(employeeDto,EmployeeEntity.class);
             log.info("employee entity for create {} ",employeeEntity.toString());
         EmployeeEntity emp =employeeRepo.save(employeeEntity);
@@ -49,7 +50,7 @@ public class EmployeeService {
     }
 
     public EmployeeEntity getemployeeById(String id){
-        return employeeRepo.findById(id).orElseThrow(() -> new RuntimeException("Task was not found"));
+        return employeeRepo.findById(id).orElseThrow(() -> new RuntimeException("Employee was not found"));
     }
     public EmployeeEntity updateEmployee(EmployeeEntity employeeEntity){
         try{
@@ -78,37 +79,43 @@ public class EmployeeService {
     }
     public EmployeeEntity updateOnlyVals(EmployeeDto emp)
     {
+        //login to remove null
         modelMapper.getConfiguration().setSkipNullEnabled(true);
         EmployeeEntity data2 = getemployeeById(emp.getId());
+//        EmployeeEntity data = new EmployeeEntity(data2);
         modelMapper.map(emp,data2);
 
+        //login to remove blanks
         EmployeeEntity data = getemployeeById(emp.getId());
         if (data2.getFiestname().isBlank()){
             log.info("1blank fname");
             data2.setFiestname(data.getFiestname());
         }if (data2.getLastname().isBlank()){
-            log.info("not up {}",data2.getLastname());
-            log.info("blank fname");
+            log.info("not up {}"+data2.getLastname());
+            log.info("blank lname new {}",data.getLastname());
             data2.setLastname(data.getLastname());
-        log.info(" up {}",data2.getLastname());
-        }if (data2.getMonbilenumber().describeConstable().isPresent()){
+        log.info(" up {}",data2.toString());
+        }if (!data2.getMonbilenumber().describeConstable().isPresent()){
+//            log.info(data2.getMonbilenumber().describeConstable().isPresent());
 //            emp.setMonbilenumber(emps.getMonbilenumber());
-            log.info("blank fname");
-            data2.setMonbilenumber(data.getMonbilenumber());
-        }if (data2.getMonbilenumber().describeConstable().isPresent()){
-            log.info("blank fname");
+            log.info("blank mob");
             data2.setMonbilenumber(data.getMonbilenumber());
         }if (data2.getDob().toString().isBlank()){
+        log.info("blank dob");
             data2.setDob(data.getDob());
         }
         if (data2.getPost().isBlank()){
+            log.info("blank post");
             data2.setPost(data.getPost());
         }
         if (data2.getEmployeestatus().isBlank()){
+            log.info("blank status");
                 data2.setEmployeestatus(data.getEmployeestatus());
         }if(data2.getCreatedat().toString().isBlank()){
+        log.info("blank createdate");
             data2.setCreatedat(data.getCreatedat());
         }if(data2.getEmergencycontact().isBlank()){
+        log.info("blank econtact");
             data2.setEmergencycontact(data.getEmergencycontact());
         }
 

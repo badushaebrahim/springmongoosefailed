@@ -1,0 +1,30 @@
+server:
+  port: 1414
+
+spring:
+  datasource:
+    uri: jdbc:postgresql://localhost:5432/employee
+    username: postgres
+    password: 1234
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    hibernate:
+      ddl-auto: create-drop
+  mvc:
+    path match:
+      matching-strategy: ant-path-matcher
+app:
+  name: post
+  api:
+    title: postgres Boot APIs
+    version: 3.0.0
+    description: Spring Boot APIs description
+    base-package: training.acabes.mock
+    contact-name: apisupportgroup
+    contact-email: apisupportgroup@abc.com
+    swagger:
+      enable: false

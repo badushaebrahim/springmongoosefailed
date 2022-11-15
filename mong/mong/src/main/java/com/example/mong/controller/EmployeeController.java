@@ -1,6 +1,7 @@
 package com.example.mong.controller;
 
 import com.example.mong.model.EmployeeDto;
+import com.example.mong.model.EmployeeReq;
 import com.example.mong.model.ResponceModel;
 import com.example.mong.model.entity.EmployeeEntity;
 import com.example.mong.service.EmployeeService;
@@ -17,7 +18,7 @@ public class EmployeeController {
     EmployeeService employeeService;
 
     @PostMapping
-    public ResponseEntity<?> createEmployee(@RequestBody EmployeeDto employeeDto){
+    public ResponseEntity<?> createEmployee(@RequestBody EmployeeReq employeeDto){
         try{
             EmployeeEntity employee =employeeService.create(employeeDto);
             return  new ResponseEntity<>(employee, HttpStatus.CREATED);
