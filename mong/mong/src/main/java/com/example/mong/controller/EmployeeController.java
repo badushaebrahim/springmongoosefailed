@@ -11,6 +11,8 @@ import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/employee")
 public class EmployeeController {
@@ -28,13 +30,13 @@ public class EmployeeController {
     }
 
     @GetMapping
-    public ResponseEntity<?> AllEmployees(){
+    public ResponseEntity<List<EmployeeDto>> AllEmployees(){
         return new ResponseEntity<>(employeeService.getAll(),HttpStatus.OK);
     }
     @GetMapping("/{id}")
     public ResponseEntity<?> EmployeeByIds(@PathVariable String id){
         try{
-            EmployeeEntity employee = employeeService.getemployeeById(id);
+            EmployeeDto employee = employeeService.getemployeeByIdDto(id);
             return new ResponseEntity<>(employee,HttpStatus.OK);
         }catch (Exception e){
             ResponceModel rsp = new ResponceModel(e.getMessage());

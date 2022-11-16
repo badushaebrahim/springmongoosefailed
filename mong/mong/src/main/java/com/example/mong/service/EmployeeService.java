@@ -15,6 +15,7 @@ import org.springframework.http.RequestEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -45,14 +46,24 @@ public class EmployeeService {
 
     }
 
-    public List<EmployeeEntity> getAll() {
-        List<EmployeeEntity> data = employeeRepo.findAll();
+    public List<EmployeeDto> getAll() {
+        List<EmployeeEntity> datas = employeeRepo.findAll();
+        List<EmployeeDto> Responces = new ArrayList<EmployeeDto>();
+        for (EmployeeEntity data: datas) {
+            EmployeeDto temp = modelMapper.map(data,EmployeeDto.class);
+            Responces.add(temp);
+        }
         log.info("all retived");
-        return data;
+        return Responces;
     }
 
     public EmployeeEntity getemployeeById(String id) {
         return employeeRepo.findById(id).orElseThrow(() -> new RuntimeException("Employee was not found"));
+    }
+    public EmployeeDto getemployeeByIdDto(String id) {
+        EmployeeEntity employeeEntity =employeeRepo.findById(id).orElseThrow(() -> new RuntimeException("Employee was not found"));
+        EmployeeDto employeeDto = modelMapper.map(employeeEntity,EmployeeDto.class);
+        return employeeDto;
     }
 
     public EmployeeEntity updateEmployee(EmployeeEntity employeeEntity) {
@@ -85,9 +96,7 @@ public class EmployeeService {
 
           EmployeeEntity data = getemployeeById(emp.getId());
 
-String s="hi";
-s.isBlank();
-s.isEmpty();
+
         String firstName =StringUtils.isBlank( emp.getFiestname() ) ? data.getFiestname() : emp.getFiestname();
         data.setFiestname(firstName);
 
