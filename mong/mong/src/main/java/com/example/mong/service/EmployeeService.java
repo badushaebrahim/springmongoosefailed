@@ -5,11 +5,14 @@ import com.example.mong.model.EmployeeReq;
 import com.example.mong.model.ResponceModel;
 import com.example.mong.model.entity.EmployeeEntity;
 import com.example.mong.repo.EmployeeRepo;
+import com.example.mong.util.multimodels;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.valves.StuckThreadDetectionValve;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.coyote.Response;
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.RequestEntity;
 import org.springframework.stereotype.Service;
@@ -18,6 +21,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -49,20 +53,37 @@ public class EmployeeService {
     public List<EmployeeDto> getAll() {
         List<EmployeeEntity> datas = employeeRepo.findAll();
         List<EmployeeDto> Responces = new ArrayList<EmployeeDto>();
-        for (EmployeeEntity data: datas) {
-            EmployeeDto temp = modelMapper.map(data,EmployeeDto.class);
+        for (EmployeeEntity data : datas) {
+            EmployeeDto temp = modelMapper.map(data, EmployeeDto.class);
             Responces.add(temp);
         }
         log.info("all retived");
         return Responces;
     }
 
+    public List<EmployeeDto> getAllD() {
+        List<EmployeeEntity> datas = employeeRepo.findAll();
+        List<EmployeeDto> Responces = new ArrayList<EmployeeDto>();
+        Responces = datas.stream()
+                .map(entity -> mapnew(entity, EmployeeDto.class))
+                .collect(Collectors.toList());
+//datas.stream().map();
+        return Responces;
+    }
+
+    public EmployeeDto mapnew(EmployeeEntity e, Class<EmployeeDto> outClass) {
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        return modelMapper.map(e, outClass);
+
+    }
+
     public EmployeeEntity getemployeeById(String id) {
         return employeeRepo.findById(id).orElseThrow(() -> new RuntimeException("Employee was not found"));
     }
+
     public EmployeeDto getemployeeByIdDto(String id) {
-        EmployeeEntity employeeEntity =employeeRepo.findById(id).orElseThrow(() -> new RuntimeException("Employee was not found"));
-        EmployeeDto employeeDto = modelMapper.map(employeeEntity,EmployeeDto.class);
+        EmployeeEntity employeeEntity = employeeRepo.findById(id).orElseThrow(() -> new RuntimeException("Employee was not found"));
+        EmployeeDto employeeDto = modelMapper.map(employeeEntity, EmployeeDto.class);
         return employeeDto;
     }
 
@@ -94,10 +115,10 @@ public class EmployeeService {
 
     public EmployeeEntity updateOnlyVals(EmployeeDto emp) {
 
-          EmployeeEntity data = getemployeeById(emp.getId());
+        EmployeeEntity data = getemployeeById(emp.getId());
 
 
-        String firstName =StringUtils.isBlank( emp.getFiestname() ) ? data.getFiestname() : emp.getFiestname();
+        String firstName = StringUtils.isBlank(emp.getFiestname()) ? data.getFiestname() : emp.getFiestname();
         data.setFiestname(firstName);
 
         String lastName = StringUtils.isBlank(emp.getLastname()) ? data.getLastname() : emp.getLastname();

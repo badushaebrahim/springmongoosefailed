@@ -31,7 +31,7 @@ public class EmployeeController {
 
     @GetMapping
     public ResponseEntity<List<EmployeeDto>> AllEmployees(){
-        return new ResponseEntity<>(employeeService.getAll(),HttpStatus.OK);
+        return new ResponseEntity<>(employeeService.getAllD(),HttpStatus.OK);
     }
     @GetMapping("/{id}")
     public ResponseEntity<?> EmployeeByIds(@PathVariable String id){
