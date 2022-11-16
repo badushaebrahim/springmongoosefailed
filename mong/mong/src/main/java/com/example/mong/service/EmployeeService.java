@@ -7,12 +7,15 @@ import com.example.mong.model.entity.EmployeeEntity;
 import com.example.mong.repo.EmployeeRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.valves.StuckThreadDetectionValve;
+import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.RequestEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -25,112 +28,93 @@ public class EmployeeService {
     ModelMapper modelMapper;
 
 
-    public EmployeeEntity create(EmployeeReq employeeDto){
-        try{
-            log.info("employeedto {} , interactionId : {} for create ",employeeDto.toString());
-        EmployeeEntity employeeEntity = modelMapper.map(employeeDto,EmployeeEntity.class);
-            log.info("employee entity for create {} ",employeeEntity.toString());
-        EmployeeEntity emp =employeeRepo.save(employeeEntity);
-            log.info("employee entity saved to db {}",emp.toString());
+    public EmployeeEntity create(EmployeeReq employeeDto) {
+        try {
+            log.info("employeedto {} , interactionId : {} for create ", employeeDto.toString());
+            EmployeeEntity employeeEntity = modelMapper.map(employeeDto, EmployeeEntity.class);
+            log.info("employee entity for create {} ", employeeEntity.toString());
+            EmployeeEntity emp = employeeRepo.save(employeeEntity);
+            log.info("employee entity saved to db {}", emp.toString());
             log.info("employee saved to db");
-       return emp ;
+            return emp;
 
-        }
-        catch (Exception e){
-            log.error("employee saved to db failed"+e.getMessage());
-        throw new RuntimeException(e.getMessage());
+        } catch (Exception e) {
+            log.error("employee saved to db failed" + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
 
     }
 
-    public List<EmployeeEntity> getAll(){
+    public List<EmployeeEntity> getAll() {
         List<EmployeeEntity> data = employeeRepo.findAll();
         log.info("all retived");
         return data;
     }
 
-    public EmployeeEntity getemployeeById(String id){
+    public EmployeeEntity getemployeeById(String id) {
         return employeeRepo.findById(id).orElseThrow(() -> new RuntimeException("Employee was not found"));
     }
-    public EmployeeEntity updateEmployee(EmployeeEntity employeeEntity){
-        try{
+
+    public EmployeeEntity updateEmployee(EmployeeEntity employeeEntity) {
+        try {
             EmployeeEntity emp = employeeRepo.save(employeeEntity);
             log.error("employee update to db ");
             return emp;
 
-        }
-        catch (Exception e){
-            log.error("employee update to db failed"+e.getMessage());
+        } catch (Exception e) {
+            log.error("employee update to db failed" + e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
     }
-    public ResponceModel deletebyid(String id){
-        try{
+
+    public ResponceModel deletebyid(String id) {
+        try {
             employeeRepo.delete(getemployeeById(id));
             log.error("employee deleted from db ");
-            return new ResponceModel("User with id "+id+"deleted succesfully");
+            return new ResponceModel("User with id " + id + "deleted succesfully");
 
-        }catch (Exception e){
-            log.error("employee delete from db failed"+e.getMessage());
+        } catch (Exception e) {
+            log.error("employee delete from db failed" + e.getMessage());
             return new ResponceModel(e.getMessage());
 
 
         }
     }
-    public EmployeeEntity updateOnlyVals(EmployeeDto emp)
-    {
-        //login to remove null
-        modelMapper.getConfiguration().setSkipNullEnabled(true);
-        EmployeeEntity data2 = getemployeeById(emp.getId());
-//        EmployeeEntity data = new EmployeeEntity(data2);
-        modelMapper.map(emp,data2);
 
-        //login to remove blanks
-        EmployeeEntity data = getemployeeById(emp.getId());
-        if (data2.getFiestname().isBlank()){
-            log.info("1blank fname");
-            data2.setFiestname(data.getFiestname());
-        }if (data2.getLastname().isBlank()){
-            log.info("not up {}"+data2.getLastname());
-            log.info("blank lname new {}",data.getLastname());
-            data2.setLastname(data.getLastname());
-        log.info(" up {}",data2.toString());
-        }if (!data2.getMonbilenumber().describeConstable().isPresent()){
-//            log.info(data2.getMonbilenumber().describeConstable().isPresent());
-//            emp.setMonbilenumber(emps.getMonbilenumber());
-            log.info("blank mob");
-            data2.setMonbilenumber(data.getMonbilenumber());
-        }if (data2.getDob().toString().isBlank()){
-        log.info("blank dob");
-            data2.setDob(data.getDob());
-        }
-        if (data2.getPost().isBlank()){
-            log.info("blank post");
-            data2.setPost(data.getPost());
-        }
-        if (data2.getEmployeestatus().isBlank()){
-            log.info("blank status");
-                data2.setEmployeestatus(data.getEmployeestatus());
-        }if(data2.getCreatedat().toString().isBlank()){
-        log.info("blank createdate");
-            data2.setCreatedat(data.getCreatedat());
-        }if(data2.getEmergencycontact().isBlank()){
-        log.info("blank econtact");
-            data2.setEmergencycontact(data.getEmergencycontact());
-        }
+    public EmployeeEntity updateOnlyVals(EmployeeDto emp) {
 
-//        return data2;
+          EmployeeEntity data = getemployeeById(emp.getId());
 
-        return employeeRepo.save(data2);
+String s="hi";
+s.isBlank();
+s.isEmpty();
+        String firstName =StringUtils.isBlank( emp.getFiestname() ) ? data.getFiestname() : emp.getFiestname();
+        data.setFiestname(firstName);
+
+        String lastName = StringUtils.isBlank(emp.getLastname()) ? data.getLastname() : emp.getLastname();
+        data.setLastname(lastName);
+        Long mobileNumber = StringUtils.isBlank(String.valueOf(emp.getMonbilenumber())) ? data.getMonbilenumber() : emp.getMonbilenumber();
+        data.setMonbilenumber(mobileNumber);
+        LocalDate dob = StringUtils.isBlank(String.valueOf(emp.getMonbilenumber())) ? data.getDob() : emp.getDob();
+        data.setDob(dob);
+        String post = StringUtils.isBlank(emp.getPost()) ? data.getPost() : emp.getPost();
+        data.setPost(post);
+        String employementStatus = StringUtils.isBlank(emp.getEmployeestatus()) ? data.getEmployeestatus() : emp.getEmployeestatus();
+        data.setEmployeestatus(employementStatus);
+        Date timestamp = StringUtils.isBlank(emp.getCreatedat().toString()) ? data.getCreatedat() : emp.getCreatedat();
+        data.setCreatedat(timestamp);
+        String contact = StringUtils.isBlank(emp.getEmergencycontact()) ? data.getEmergencycontact() : emp.getEmergencycontact();
+        data.setEmergencycontact(contact);
+        return employeeRepo.save(data);
     }
 
-    public EmployeeEntity updateOnlyChanged (EmployeeDto dto){
+    public EmployeeEntity updateOnlyChanged(EmployeeDto dto) {
         EmployeeEntity emp = getemployeeById(dto.getId());
 ////        modelMapper.map(dto,emp);
 //        modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
         modelMapper.getConfiguration().setSkipNullEnabled(true);
-        log.info("mapped val {}",dto.toString());
-        modelMapper.map(dto,emp);
+        log.info("mapped val {}", dto.toString());
+        modelMapper.map(dto, emp);
         return emp;
 
     }
