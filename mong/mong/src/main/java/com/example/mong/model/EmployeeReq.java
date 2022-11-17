@@ -11,13 +11,14 @@ import java.util.Date;
 @NoArgsConstructor
 public class EmployeeReq {
 
-        private String fiestname;
-        private String lastname;
-        private String Emergencycontact;
-        private Long monbilenumber;
+        private String firstName;
+        private String lastName;
+
+        private String EmergencyContact;
+        private Long mobileNumber;
         private LocalDate dob;
         private String post ;
-        private  String employeestatus;
+        private  String employeeStatus;
         private boolean active;
-        private Date createdat;
+        private Date createdDate;
     }

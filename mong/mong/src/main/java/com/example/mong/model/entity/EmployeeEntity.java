@@ -16,14 +16,14 @@ import java.util.Date;
 public class EmployeeEntity {
     @Id
     private String id;
-    private String fiestname;
-    private String lastname;
-    private String Emergencycontact;
-    private Long monbilenumber;
+    private String firstName;
+    private String lastName;
+    private String emergencyContact;
+    private Long mobileNumber;
     private LocalDate dob;
     private String post ;
-    private  String employeestatus;
+    private  String employeeStatus;
     private boolean active;
-    private Date createdat;
+    private Date createdDate;
 
 }

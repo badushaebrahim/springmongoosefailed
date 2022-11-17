@@ -1,24 +1,21 @@
 package com.example.mong.service;
 
+import com.example.mong.exception.TaskNotFound;
 import com.example.mong.model.EmployeeDto;
 import com.example.mong.model.EmployeeReq;
 import com.example.mong.model.ResponceModel;
 import com.example.mong.model.entity.EmployeeEntity;
 import com.example.mong.repo.EmployeeRepo;
-import com.example.mong.util.multimodels;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.valves.StuckThreadDetectionValve;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.coyote.Response;
-import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.RequestEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,7 +42,7 @@ public class EmployeeService {
 
         } catch (Exception e) {
             log.error("employee saved to db failed" + e.getMessage());
-            throw new RuntimeException(e.getMessage());
+            throw new TaskNotFound(e.getMessage());
         }
 
     }
@@ -63,18 +60,19 @@ public class EmployeeService {
 
     public List<EmployeeDto> getAllD() {
         List<EmployeeEntity> datas = employeeRepo.findAll();
-        List<EmployeeDto> Responces = new ArrayList<EmployeeDto>();
-        Responces = datas.stream()
-                .map(entity -> mapnew(entity, EmployeeDto.class))
+        List<EmployeeDto> Responces = datas.stream()
+                .map(entity -> modelMapper.map(entity, EmployeeDto.class))
                 .collect(Collectors.toList());
-//datas.stream().map();
         return Responces;
     }
 
-    public EmployeeDto mapnew(EmployeeEntity e, Class<EmployeeDto> outClass) {
-        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-        return modelMapper.map(e, outClass);
 
+
+    public List<EmployeeDto> getAllc() {
+        List<EmployeeEntity> datas = employeeRepo.findAll();
+        List<EmployeeDto> Responces = Arrays.asList(modelMapper.map(datas, EmployeeDto[].class));
+
+        return Responces;
     }
 
     public EmployeeEntity getemployeeById(String id) {
@@ -118,23 +116,23 @@ public class EmployeeService {
         EmployeeEntity data = getemployeeById(emp.getId());
 
 
-        String firstName = StringUtils.isBlank(emp.getFiestname()) ? data.getFiestname() : emp.getFiestname();
-        data.setFiestname(firstName);
+        String firstName = StringUtils.isBlank(emp.getFirstName()) ? data.getFirstName() : emp.getFirstName();
+        data.setFirstName(firstName);
 
-        String lastName = StringUtils.isBlank(emp.getLastname()) ? data.getLastname() : emp.getLastname();
-        data.setLastname(lastName);
-        Long mobileNumber = StringUtils.isBlank(String.valueOf(emp.getMonbilenumber())) ? data.getMonbilenumber() : emp.getMonbilenumber();
-        data.setMonbilenumber(mobileNumber);
-        LocalDate dob = StringUtils.isBlank(String.valueOf(emp.getMonbilenumber())) ? data.getDob() : emp.getDob();
+        String lastName = StringUtils.isBlank(emp.getLastName()) ? data.getLastName() : emp.getLastName();
+        data.setLastName(lastName);
+        Long mobileNumber = StringUtils.isBlank(String.valueOf(emp.getMobileNumber())) ? data.getMobileNumber() : emp.getMobileNumber();
+        data.setMobileNumber(mobileNumber);
+        LocalDate dob = StringUtils.isBlank(String.valueOf(emp.getMobileNumber())) ? data.getDob() : emp.getDob();
         data.setDob(dob);
         String post = StringUtils.isBlank(emp.getPost()) ? data.getPost() : emp.getPost();
         data.setPost(post);
-        String employementStatus = StringUtils.isBlank(emp.getEmployeestatus()) ? data.getEmployeestatus() : emp.getEmployeestatus();
-        data.setEmployeestatus(employementStatus);
-        Date timestamp = StringUtils.isBlank(emp.getCreatedat().toString()) ? data.getCreatedat() : emp.getCreatedat();
-        data.setCreatedat(timestamp);
-        String contact = StringUtils.isBlank(emp.getEmergencycontact()) ? data.getEmergencycontact() : emp.getEmergencycontact();
-        data.setEmergencycontact(contact);
+        String employementStatus = StringUtils.isBlank(emp.getEmployeeStatus()) ? data.getEmployeeStatus() : emp.getEmployeeStatus();
+        data.setEmployeeStatus(employementStatus);
+        Date timestamp = StringUtils.isBlank(emp.getCreateDate().toString()) ? data.getCreatedDate() : emp.getCreateDate();
+        data.setCreatedDate(timestamp);
+        String contact = StringUtils.isBlank(emp.getEmergencyContact()) ? data.getEmergencyContact() : emp.getEmergencyContact();
+        data.setEmergencyContact(contact);
         return employeeRepo.save(data);
     }
 

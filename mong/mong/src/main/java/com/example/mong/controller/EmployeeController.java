@@ -5,6 +5,7 @@ import com.example.mong.model.EmployeeReq;
 import com.example.mong.model.ResponceModel;
 import com.example.mong.model.entity.EmployeeEntity;
 import com.example.mong.service.EmployeeService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
@@ -12,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@Slf4j
 @RestController
 @RequestMapping("/employee")
 public class EmployeeController {
@@ -20,7 +21,7 @@ public class EmployeeController {
     EmployeeService employeeService;
 
     @PostMapping
-    public ResponseEntity<?> createEmployee(@RequestBody EmployeeReq employeeDto){
+    public ResponseEntity<?> createEmployee(@RequestHeader("calltype") String type, @RequestBody EmployeeReq employeeDto){
         try{
             EmployeeEntity employee =employeeService.create(employeeDto);
             return  new ResponseEntity<>(employee, HttpStatus.CREATED);
@@ -31,7 +32,10 @@ public class EmployeeController {
 
     @GetMapping
     public ResponseEntity<List<EmployeeDto>> AllEmployees(){
+//        log.info(type);
         return new ResponseEntity<>(employeeService.getAllD(),HttpStatus.OK);
+
+//        return new ResponseEntity<>(employeeService.getAllc(),HttpStatus.OK);
     }
     @GetMapping("/{id}")
     public ResponseEntity<?> EmployeeByIds(@PathVariable String id){
