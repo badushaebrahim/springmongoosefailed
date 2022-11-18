@@ -1,16 +1,16 @@
 package training.Immobilier.management.model.request;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import training.Immobilier.management.enums.LoanStatusEnums;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class LoanRequest {
-    private String name;
-    private int age;
-    private Long nationalId;
-    private float loanAmount;
+public class LoanTenurechangeRequest {
+
     private int tenure;
+    private Long id;
 }

@@ -1,18 +1,16 @@
 package training.Immobilier.management.model.response;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Optional;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class LoanResponse {
+public class ResponseObject {
+    Optional<Object> Data;
+    Optional<String> Error;
+    String Status;
 
-    private float installment;
-    private float intrestRate;
-    private int totalIntrestAmount;
-    private float fees;
-    private float total;
 }

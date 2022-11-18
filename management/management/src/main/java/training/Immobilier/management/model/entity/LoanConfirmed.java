@@ -11,8 +11,8 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "Loan")
-public class LoanEntity {
+@Table(name = "LoanConfirmed")
+public class LoanConfirmed {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
